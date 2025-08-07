@@ -1,51 +1,20 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Marker AR - Change Duck Color</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs cursor="rayOrigin: mouse">
-      <!-- Hiro Marker -->
-      <a-marker preset="hiro">
-        <a-entity id="duck"
-          gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF/Duck.gltf"
-          scale="0.5 0.5 0.5"
-          position="0 0 0"
-          rotation="0 0 0">
-        </a-entity>
-      </a-marker>
+<script>
+  AFRAME.registerComponent('highlight-on-tap', {
+    init: function () {
+      this.el.addEventListener('click', () => {
+        const mesh = this.el.getObject3D('mesh');
+        if (!mesh) return;
 
-      <!-- Camera with cursor for clicks/taps -->
-      <a-entity camera>
-        <a-cursor></a-cursor>
-      </a-entity>
-    </a-scene>
-
-    <!-- UI -->
-    <p style="position: fixed; bottom: 10px; width: 100%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding: 5px;">
-      Scan the Hiro marker and tap the duck to change color 🦆
-    </p>
-
-    <!-- JS to change color -->
-    <script>
-      AFRAME.registerComponent('random-color', {
-        init: function () {
-          this.el.addEventListener('click', () => {
-            const mesh = this.el.getObject3D('mesh');
-            if (!mesh) return;
-            mesh.traverse((node) => {
-              if (node.isMesh && node.material) {
-                node.material.color.setRGB(Math.random(), Math.random(), Math.random());
-              }
-            });
-          });
-        }
+        mesh.traverse((node) => {
+          if (node.isMesh && node.material) {
+            // Change emissive color instead of base color
+            node.material.emissive.setRGB(Math.random(), Math.random(), Math.random());
+            node.material.emissiveIntensity = 1;
+          }
+        });
       });
+    }
+  });
 
-      document.querySelector('#duck').setAttribute('random-color', '');
-    </script>
-  </body>
-</html>
+  document.querySelector('#duck').setAttribute('highlight-on-tap', '');
+</script>
