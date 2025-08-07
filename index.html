@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My First AR</title>
+    <title>AR with 3D Model</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
-      <!-- Marker -->
+      <!-- Hiro Marker -->
       <a-marker preset="hiro">
-        <a-box position="0 0.5 0" material="color: red;"></a-box>
+        <a-gltf-model 
+          src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF/Duck.gltf"
+          scale="0.05 0.05 0.05"
+          position="0 0 0"
+          rotation="0 0 0">
+        </a-gltf-model>
       </a-marker>
 
-      <!-- Camera -->
       <a-entity camera></a-entity>
     </a-scene>
+
+    <p style="position: fixed; bottom: 10px; width: 100%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding: 5px;">
+      Point at the Hiro marker to see a 3D Duck 🦆
+    </p>
   </body>
 </html>
