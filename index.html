@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR Duck Color Changer</title>
+    <title>Marker AR - Change Duck Color</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs cursor="rayOrigin: mouse">
+      <!-- Hiro Marker -->
       <a-marker preset="hiro">
         <a-entity id="duck"
           gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF/Duck.gltf"
@@ -17,16 +18,18 @@
         </a-entity>
       </a-marker>
 
-      <!-- Camera + Cursor -->
+      <!-- Camera with cursor for clicks/taps -->
       <a-entity camera>
         <a-cursor></a-cursor>
       </a-entity>
     </a-scene>
 
+    <!-- UI -->
     <p style="position: fixed; bottom: 10px; width: 100%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding: 5px;">
-      Point at the Hiro marker and tap the duck to change its color 🦆
+      Scan the Hiro marker and tap the duck to change color 🦆
     </p>
 
+    <!-- JS to change color -->
     <script>
       AFRAME.registerComponent('random-color', {
         init: function () {
@@ -34,7 +37,7 @@
             const mesh = this.el.getObject3D('mesh');
             if (!mesh) return;
             mesh.traverse((node) => {
-              if (node.isMesh) {
+              if (node.isMesh && node.material) {
                 node.material.color.setRGB(Math.random(), Math.random(), Math.random());
               }
             });
