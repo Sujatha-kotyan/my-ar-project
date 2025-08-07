@@ -1,20 +1,53 @@
-<script>
-  AFRAME.registerComponent('highlight-on-tap', {
-    init: function () {
-      this.el.addEventListener('click', () => {
-        const mesh = this.el.getObject3D('mesh');
-        if (!mesh) return;
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AR Duck Tap Color Change</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- A-Frame & AR.js -->
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
-        mesh.traverse((node) => {
-          if (node.isMesh && node.material) {
-            // Change emissive color instead of base color
-            node.material.emissive.setRGB(Math.random(), Math.random(), Math.random());
-            node.material.emissiveIntensity = 1;
-          }
-        });
+    <!-- Script to change color on click -->
+    <script>
+      AFRAME.registerComponent('color-change-on-click', {
+        init: function () {
+          this.el.addEventListener('click', () => {
+            const mesh = this.el.getObject3D('mesh');
+            if (!mesh) return;
+
+            mesh.traverse((node) => {
+              if (node.isMesh && node.material) {
+                // Set a random color safely
+                node.material.color.setRGB(Math.random(), Math.random(), Math.random());
+              }
+            });
+          });
+        }
       });
-    }
-  });
+    </script>
+  </head>
 
-  document.querySelector('#duck').setAttribute('highlight-on-tap', '');
-</script>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs>
+
+      <!-- Hiro Marker -->
+      <a-marker preset="hiro">
+        <a-gltf-model 
+          id="duck"
+          src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF/Duck.gltf"
+          scale="0.5 0.5 0.5"
+          position="0 0 0"
+          rotation="0 0 0"
+          color-change-on-click>
+        </a-gltf-model>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <p style="position: fixed; bottom: 10px; width: 100%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding: 5px;">
+      Point at the Hiro marker 🟩 and tap the duck to change its color 🎨
+    </p>
+  </body>
+</html>
