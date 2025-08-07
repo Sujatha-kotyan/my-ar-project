@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Test GLB with Model Viewer</title>
+    <meta charset="UTF-8" />
+    <title>GLB Test - Avocado</title>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
       body {
         margin: 0;
-        background: #f0f0f0;
+        padding: 0;
+        background: #ccc;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         height: 100vh;
       }
       model-viewer {
-        width: 90vw;
-        height: 90vh;
+        width: 400px;
+        height: 400px;
       }
     </style>
   </head>
   <body>
     <model-viewer 
-      src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Avocado/glTF-Binary/Avocado.glb"
-      alt="A 3D model of an avocado" 
+      src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Avocado/glTF-Binary/Avocado.glb" 
+      alt="Avocado Model" 
       auto-rotate 
       camera-controls 
       ar 
