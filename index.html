@@ -8,11 +8,14 @@
     <script>
   const modelViewer = document.querySelector('model-viewer');
 
-  modelViewer.addEventListener('click', () => {
-    modelViewer.rotationPerSecond = modelViewer.rotationPerSecond || 0.05;
-    let currentRotation = modelViewer.getCameraOrbit().theta;
-    modelViewer.cameraOrbit = `${currentRotation + modelViewer.rotationPerSecond}rad 75deg 2.5m`;
-  });
+  <model-viewer
+  id="duck"
+  src="duck.glb"
+  ar
+  auto-rotate
+  camera-controls
+  alt="A 3D duck">
+</model-viewer>
 </script>
   </head>
   <body style="margin: 0; overflow: hidden;">
@@ -35,6 +38,7 @@
     </p>
   </body>
 </html>
+
 
 
 
