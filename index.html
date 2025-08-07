@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Model Viewer Tap Color Change</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <title>Model Viewer AR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
-      body { margin: 0; }
+      body {
+        margin: 0;
+        background: #eee;
+      }
+
       model-viewer {
         width: 100vw;
         height: 100vh;
@@ -14,12 +17,12 @@
     </style>
   </head>
   <body>
-    <model-viewer 
+    <model-viewer
       id="duck"
-      src="https://modelviewer.dev/shared-assets/models/Duck.glb"
-      ar 
-      auto-rotate 
-      camera-controls 
+      src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF-Binary/Duck.glb"
+      ar
+      camera-controls
+      auto-rotate
       alt="A 3D duck">
     </model-viewer>
 
@@ -28,13 +31,15 @@
 
       duck.addEventListener('click', () => {
         const material = duck.model?.materials?.[0];
-        if (material) {
-          const r = Math.random();
-          const g = Math.random();
-          const b = Math.random();
-          material.pbrMetallicRoughness.setBaseColorFactor([r, g, b, 1]);
+        if (material && material.pbrMetallicRoughness) {
+          material.pbrMetallicRoughness.setBaseColorFactor([
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            1,
+          ]);
         } else {
-          console.warn("Material not loaded yet.");
+          console.warn("Material or color not found.");
         }
       });
     </script>
