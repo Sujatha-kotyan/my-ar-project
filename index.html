@@ -44,23 +44,11 @@
 <button onclick="toggleHotspots()">Toggle Hotspots</button>
 
 <script>
-setInterval(() => {
-  try {
-    var player = parent.GetPlayer();
-    var step = player.GetVar("Step");
-
-    const hotspots = document.querySelectorAll(".hotspot");
-
-    hotspots[0].style.display = step === 1 ? "block" : "none";
-    hotspots[1].style.display = step === 2 ? "block" : "none";
-    hotspots[2].style.display = step === 3 ? "block" : "none";
-
-  } catch (e) {
-    // Storyline not available (browser testing)
-  }
-}, 500);
-
+window.addEventListener("message", function (event) {
+  console.log("Message received:", event.data);
+});
 </script>
 </body>
 </html>
+
 
