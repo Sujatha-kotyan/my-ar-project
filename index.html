@@ -1,34 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>GLB Test - Avocado</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: #ccc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-      model-viewer {
-        width: 400px;
-        height: 400px;
-      }
-    </style>
-  </head>
-  <body>
-    <model-viewer 
-      src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb" 
-      alt="Avocado Model" 
-      auto-rotate 
-      camera-controls 
-      ar 
-      ar-modes="webxr scene-viewer quick-look">
-    </model-viewer>
-  </body>
-</html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test Animation</title>
 
+  <!-- model-viewer -->
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  </script>
+
+  <style>
+    body { margin: 0; background: #000; }
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+    }
+	
+.hotspot {
+  background: rgba(255,255,255,0.9);
+  border-radius: 14px;
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+  </style>
+</head>
+
+<body>
+
+<model-viewer
+  id="model"
+  src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+  camera-controls
+  autoplay
+  animation-name="Idle"
+  interaction-prompt="none">
+
+
+
+</model-viewer>
+<button onclick="toggleHotspots()">Toggle Hotspots</button>
+
+<script>
+setInterval(() => {
+  try {
+    var player = parent.GetPlayer();
+    var step = player.GetVar("Step");
+
+    const hotspots = document.querySelectorAll(".hotspot");
+
+    hotspots[0].style.display = step === 1 ? "block" : "none";
+    hotspots[1].style.display = step === 2 ? "block" : "none";
+    hotspots[2].style.display = step === 3 ? "block" : "none";
+
+  } catch (e) {
+    // Storyline not available (browser testing)
+  }
+}, 500);
+
+
+</body>
+</html>
