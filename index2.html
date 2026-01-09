@@ -1,29 +1,16 @@
-
 <script>
+const model = document.querySelector("model-viewer");
+
+function smoothRotate(deg) {
+  model.cameraOrbit = `${deg}deg 75deg 2.5m`;
+}
+
 window.addEventListener("message", function (event) {
-  console.log("Message received:", event.data);
   console.log("Received from Storyline:", event.data);
 
-  if (event.data === 1) {
-    document.querySelector("model-viewer").setAttribute(
-      "camera-orbit",
-      "0deg 75deg 2.5m"
-    );
-  }
-
-  if (event.data === 2) {
-    document.querySelector("model-viewer").setAttribute(
-      "camera-orbit",
-      "90deg 75deg 2.5m"
-    );
-  }
-
-  if (event.data === 3) {
-    document.querySelector("model-viewer").setAttribute(
-      "camera-orbit",
-      "180deg 75deg 2.5m"
-    );
-  }
+  if (event.data === 1) smoothRotate(0);
+  if (event.data === 2) smoothRotate(90);
+  if (event.data === 3) smoothRotate(180);
 });
 </script>
 </body>
