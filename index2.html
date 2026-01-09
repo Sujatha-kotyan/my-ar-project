@@ -1,30 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Test Animation</title>
-
-  <!-- model-viewer -->
+  <title>Chapter 8 – Model Control</title>
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
 
   <style>
-    body { margin: 0; background: #000; }
+    body { margin: 0; background: #111; }
     model-viewer {
       width: 100vw;
       height: 100vh;
     }
-	
-.hotspot {
-  background: rgba(255,255,255,0.9);
-  border-radius: 14px;
-  padding: 6px 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-}
-
   </style>
 </head>
 
@@ -32,31 +19,46 @@
 
 <model-viewer
   id="model"
-  src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+  src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   camera-controls
-  autoplay
-  animation-name="Idle"
-  interaction-prompt="none">
-
-
-
+  auto-rotate
+  exposure="1"
+  shadow-intensity="1">
 </model-viewer>
-  <script>
-const model = document.querySelector("model-viewer");
 
-function smoothRotate(deg) {
-  model.cameraOrbit = `${deg}deg 75deg 2.5m`;
-}
+<script>
+  const model = document.getElementById("model");
+  let ready = false;
 
-window.addEventListener("message", function (event) {
-  console.log("Received from Storyline:", event.data);
+  model.addEventListener("load", () => {
+    ready = true;
+    console.log("✅ Model loaded");
+  });
 
-  if (event.data === 1) smoothRotate(0);
-  if (event.data === 2) smoothRotate(90);
-  if (event.data === 3) smoothRotate(180);
-});
+  window.addEventListener("message", (event) => {
+    console.log("📩 Received:", event.data);
+
+    if (!ready) return;
+
+    if (event.data === 1) {
+      model.cameraOrbit = "0deg 75deg 2.5m";
+    }
+
+    if (event.data === 2) {
+      model.cameraOrbit = "90deg 75deg 2.5m";
+    }
+
+    if (event.data === 3) {
+      const mat = model.model.materials[0];
+      mat.pbrMetallicRoughness.setBaseColorFactor([
+        Math.random(),
+        Math.random(),
+        Math.random(),
+        1
+      ]);
+    }
+  });
 </script>
+
 </body>
 </html>
-
-
