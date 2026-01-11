@@ -1,0 +1,36 @@
+<model-viewer
+  id="viewer"
+  src="Astronaut.glb"
+  camera-controls
+  animation-name="Idle"
+  autoplay>
+</model-viewer>
+
+<script>
+window.addEventListener("message", (event) => {
+  if (!viewer) return;
+
+  switch (event.data) {
+
+    case 1:
+      viewer.animationName = "Idle";
+      viewer.play();
+      break;
+
+    case 2:
+      viewer.animationName = "Jump";
+      viewer.play();
+      break;
+
+    case 3:
+      viewer.animationName = "Wave";
+      viewer.play();
+      break;
+
+    case 4:
+      viewer.animationName = "Dance";
+      viewer.play();
+      break;
+  }
+});
+</script>
