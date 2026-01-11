@@ -37,8 +37,9 @@
 
   window.addEventListener("message", (event) => {
     console.log("📩 Received:", event.data);
-
     if (!ready) return;
+
+    model.removeAttribute("auto-rotate");
 
     if (event.data === 1) {
       model.cameraOrbit = "0deg 75deg 2.5m";
@@ -49,16 +50,20 @@
     }
 
     if (event.data === 3) {
-      const mat = model.model.materials[0];
-      mat.pbrMetallicRoughness.setBaseColorFactor([
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        1
-      ]);
+      model.model.materials.forEach(mat => {
+        if (mat.pbrMetallicRoughness) {
+          mat.pbrMetallicRoughness.setBaseColorFactor([
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            1
+          ]);
+        }
+      });
     }
   });
 </script>
+
 
 </body>
 </html>
