@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switch (event.data) {
       case 1:
-        viewer.cameraOrbit = "-45deg 75deg 0.5m";
+        viewer.setAttribute("camera-orbit", "45deg 75deg 6m");
+        viewer.setAttribute("interpolation-decay","200");
         break;
 
       case 2:
