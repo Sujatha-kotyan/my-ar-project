@@ -44,33 +44,51 @@
 <button onclick="toggleHotspots()">Toggle Hotspots</button>
 
 <script>
+let model;
+
+const viewer = document.getElementById("viewer");
+
+viewer.addEventListener("load", () => {
+  model = viewer.model;
+  console.log("✅ Model ready");
+});
+
+function randomColor() {
+  const material = model.materials[0];
+  material.pbrMetallicRoughness.setBaseColorFactor([
+    Math.random(),
+    Math.random(),
+    Math.random(),
+    1
+  ]);
+}
+
 window.addEventListener("message", function (event) {
-  console.log("Received from Storyline:", event.data);
+  console.log("📩 Received:", event.data);
 
-  if (event.data === 1) {
-    document.querySelector("model-viewer").setAttribute(
-      "camera-orbit",
-      "0deg 75deg 2.5m"
-    );
-  }
+  switch (event.data) {
+    case 1:
+      viewer.autoRotate = true;
+      break;
 
-  if (event.data === 2) {
-    document.querySelector("model-viewer").setAttribute(
-      "camera-orbit",
-      "90deg 75deg 2.5m"
-    );
-  }
+    case 2:
+      viewer.autoRotate = false;
+      break;
 
-  if (event.data === 3) {
-    document.querySelector("model-viewer").setAttribute(
-      "camera-orbit",
-      "180deg 75deg 2.5m"
-    );
+    case 3:
+      viewer.cameraOrbit = "45deg 75deg 2.5m";
+      break;
+
+    case 4:
+      randomColor();
+      break;
   }
 });
 </script>
+
 </body>
 </html>
+
 
 
 
