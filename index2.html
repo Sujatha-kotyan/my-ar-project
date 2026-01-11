@@ -27,42 +27,48 @@
 </model-viewer>
 
 <script>
-  const model = document.getElementById("model");
-  let ready = false;
+let model;
 
-  model.addEventListener("load", () => {
-    ready = true;
-    console.log("✅ Model loaded");
-  });
+const viewer = document.getElementById("viewer");
 
-  window.addEventListener("message", (event) => {
-    console.log("📩 Received:", event.data);
-    if (!ready) return;
+viewer.addEventListener("load", () => {
+  model = viewer.model;
+  console.log("✅ Model ready");
+});
 
-    model.removeAttribute("auto-rotate");
+function randomColor() {
+  const material = model.materials[0];
+  material.pbrMetallicRoughness.setBaseColorFactor([
+    Math.random(),
+    Math.random(),
+    Math.random(),
+    1
+  ]);
+}
 
-    if (event.data === 1) {
-      model.cameraOrbit = "0deg 75deg 2.5m";
-    }
+window.addEventListener("message", function (event) {
+  console.log("📩 Received:", event.data);
 
-    if (event.data === 2) {
-      model.cameraOrbit = "90deg 75deg 2.5m";
-    }
+  switch (event.data) {
+    case 1:
+      viewer.autoRotate = true;
+      break;
 
-    if (event.data === 3) {
-      model.model.materials.forEach(mat => {
-        if (mat.pbrMetallicRoughness) {
-          mat.pbrMetallicRoughness.setBaseColorFactor([
-            Math.random(),
-            Math.random(),
-            Math.random(),
-            1
-          ]);
-        }
-      });
-    }
-  });
+    case 2:
+      viewer.autoRotate = false;
+      break;
+
+    case 3:
+      viewer.cameraOrbit = "45deg 75deg 2.5m";
+      break;
+
+    case 4:
+      randomColor();
+      break;
+  }
+});
 </script>
+
 
 
 </body>
