@@ -18,7 +18,7 @@
 <body>
 
 <model-viewer
-  id="model"
+  id="viewer"
   src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   camera-controls
   auto-rotate
@@ -27,48 +27,53 @@
 </model-viewer>
 
 <script>
-let model;
+document.addEventListener("DOMContentLoaded", () => {
+  const viewer = document.getElementById("viewer");
 
-const viewer = document.getElementById("model");
-
-viewer.addEventListener("load", () => {
-  model = viewer.model;
-  console.log("✅ Model ready");
-});
-
-function randomColor() {
-  const material = model.materials[0];
-  material.pbrMetallicRoughness.setBaseColorFactor([
-    Math.random(),
-    Math.random(),
-    Math.random(),
-    1
-  ]);
-}
-
-window.addEventListener("message", function (event) {
-  console.log("📩 Received:", event.data);
-
-  switch (event.data) {
-    case 1:
-      viewer.autoRotate = true;
-      break;
-
-    case 2:
-      viewer.autoRotate = false;
-      break;
-
-    case 3:
-      viewer.cameraOrbit = "45deg 75deg 2.5m";
-      break;
-
-    case 4:
-      randomColor();
-      break;
+  if (!viewer) {
+    console.error("❌ model-viewer not found");
+    return;
   }
+
+  console.log("✅ model-viewer found");
+
+  viewer.addEventListener("load", () => {
+    console.log("✅ Model fully loaded");
+  });
+
+  function randomColor() {
+    const material = viewer.model.materials[0];
+    material.pbrMetallicRoughness.setBaseColorFactor([
+      Math.random(),
+      Math.random(),
+      Math.random(),
+      1
+    ]);
+  }
+
+  window.addEventListener("message", (event) => {
+    console.log("📩 Received step:", event.data);
+
+    switch (event.data) {
+      case 1:
+        viewer.autoRotate = true;
+        break;
+
+      case 2:
+        viewer.autoRotate = false;
+        break;
+
+      case 3:
+        viewer.cameraOrbit = "45deg 75deg 2.5m";
+        break;
+
+      case 4:
+        randomColor();
+        break;
+    }
+  });
 });
 </script>
-
 
 
 </body>
