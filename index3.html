@@ -26,9 +26,14 @@
 </model-viewer>
 
 <script>
-window.addEventListener("message", (event) => {
-  if (!viewer) return;
+const viewer = document.getElementById("viewer");
+// wait until model is fully loaded
+viewer.addEventListener("load", () => {
+  console.log("Model loaded, animations ready");
+});
 
+window.addEventListener("message", (event) => {
+  if (!viewer || !viewer.loaded) return;
   switch (event.data) {
 
     case 1:
