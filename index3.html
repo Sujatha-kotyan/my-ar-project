@@ -28,31 +28,30 @@
   animation-name="Idle"
   autoplay>
 </model-viewer>
-
 <script>
 const viewer = document.getElementById("viewer");
 
 window.addEventListener("message", (event) => {
-  if (!viewer) {
-    console.log("❌ viewer not found");
-    return;
-  }
-
   console.log("📩 Received:", event.data);
 
-  switch (event.data) {
+  if (!viewer) return;
+
+  switch (Number(event.data)) {
     case 1:
       viewer.animationName = "Idle";
       viewer.play();
       break;
+
     case 2:
       viewer.animationName = "Jump";
       viewer.play();
       break;
+
     case 3:
       viewer.animationName = "Wave";
       viewer.play();
       break;
+
     case 4:
       viewer.animationName = "Dance";
       viewer.play();
@@ -60,6 +59,7 @@ window.addEventListener("message", (event) => {
   }
 });
 </script>
+
 
 
 </body>
