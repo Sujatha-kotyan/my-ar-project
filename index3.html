@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Chapter 8 – Model Control</title>
+
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
@@ -27,47 +29,53 @@
 const viewer = document.getElementById("viewer");
 let danceInterval = null;
 
-/* Reset everything */
-function reset() {
-  clearInterval(danceInterval);
-  viewer.cameraOrbit = "0deg 75deg 2.5m";
-}
+// Wait for model
+viewer.addEventListener("load", () => {
+  console.log("✅ Model loaded");
+});
 
-/* 🦘 JUMP */
-function jump() {
-  reset();
-  viewer.cameraOrbit = "0deg 60deg 2.2m";
-  setTimeout(() => {
-    viewer.cameraOrbit = "0deg 75deg 2.5m";
-  }, 300);
-}
-
-/* 💃 DANCE */
-function dance() {
-  reset();
-  let angle = 0;
-  danceInterval = setInterval(() => {
-    angle += 2;
-    viewer.cameraOrbit = `${angle}deg 75deg 2.5m`;
-  }, 30);
-}
-
-/* 👋 WAVE */
-function wave() {
-  reset();
-  viewer.cameraOrbit = "30deg 75deg 2.2m";
-  setTimeout(() => {
-    viewer.cameraOrbit = "-30deg 75deg 2.2m";
-  }, 300);
-}
-
-/* 📩 Storyline messages */
+// Message from Storyline
 window.addEventListener("message", (event) => {
+  console.log("📩 Received:", event.data);
+
+  if (!viewer.loaded) return;
+
+  // stop previous effects
+  clearInterval(danceInterval);
+  viewer.autoRotate = false;
+
   switch (event.data) {
-    case 1: reset(); break;
-    case 2: jump(); break;
-    case 3: wave(); break;
-    case 4: dance(); break;
+
+    // RESET
+    case 1:
+      viewer.cameraOrbit = "0deg 75deg 2.5m";
+      break;
+
+    // JUMP (camera bounce)
+    case 2:
+      viewer.cameraOrbit = "0deg 60deg 2.2m";
+      setTimeout(() => {
+        viewer.cameraOrbit = "0deg 75deg 2.5m";
+      }, 300);
+      break;
+
+    // WAVE (small shake)
+    case 3:
+      viewer.cameraOrbit = "15deg 75deg 2.5m";
+      setTimeout(() => {
+        viewer.cameraOrbit = "-15deg 75deg 2.5m";
+      }, 200);
+      setTimeout(() => {
+        viewer.cameraOrbit = "0deg 75deg 2.5m";
+      }, 400);
+      break;
+
+    // DANCE (spin)
+    case 4:
+      viewer.autoRotate = true;
+      viewer.autoRotateDelay = 0;
+      viewer.rotationPerSecond = "180deg";
+      break;
   }
 });
 </script>
