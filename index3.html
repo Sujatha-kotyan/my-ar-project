@@ -2,13 +2,16 @@
 <html>
 <head>
   <title>Chapter 8 – Model Control</title>
+
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
-  
 
   <style>
-    body { margin: 0; background: #111; }
+    body {
+      margin: 0;
+      background: #111;
+    }
     model-viewer {
       width: 100vw;
       height: 100vh;
@@ -17,7 +20,8 @@
 </head>
 
 <body>
-  <model-viewer
+
+<model-viewer
   id="viewer"
   src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   camera-controls
@@ -27,36 +31,45 @@
 
 <script>
 const viewer = document.getElementById("viewer");
-// wait until model is fully loaded
+
+/* Model loaded */
 viewer.addEventListener("load", () => {
-  console.log("Model loaded, animations ready");
+  console.log("✅ Model loaded");
+  console.log("🎭 Available animations:", viewer.availableAnimations);
 });
 
+/* Helper to restart animation cleanly */
+function playAnim(name) {
+  viewer.pause();
+  viewer.currentTime = 0;
+  viewer.animationName = name;
+  viewer.play();
+}
+
+/* Listen to Storyline messages */
 window.addEventListener("message", (event) => {
   if (!viewer || !viewer.loaded) return;
+
   switch (event.data) {
 
     case 1:
-      viewer.animationName = "Idle";
-      viewer.play();
+      playAnim("Idle");
       break;
 
     case 2:
-      viewer.animationName = "Jump";
-      viewer.play();
+      playAnim("Jump");
       break;
 
     case 3:
-      viewer.animationName = "Wave";
-      viewer.play();
+      playAnim("Wave");
       break;
 
     case 4:
-      viewer.animationName = "Dance";
-      viewer.play();
+      playAnim("Dance");
       break;
   }
 });
 </script>
+
 </body>
 </html>
