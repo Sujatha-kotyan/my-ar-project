@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chapter 8 – Model Control</title>
-
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
 
   <style>
-    body {
-      margin: 0;
-      background: #111;
-    }
+    body { margin: 0; background: #111; }
     model-viewer {
       width: 100vw;
       height: 100vh;
@@ -25,42 +20,57 @@
   id="viewer"
   src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   camera-controls
-  animation-name="Idle"
   autoplay>
 </model-viewer>
+
 <script>
 const viewer = document.getElementById("viewer");
+let danceInterval = null;
 
+/* Reset everything */
+function reset() {
+  clearInterval(danceInterval);
+  viewer.cameraOrbit = "0deg 75deg 2.5m";
+}
+
+/* 🦘 JUMP */
+function jump() {
+  reset();
+  viewer.cameraOrbit = "0deg 60deg 2.2m";
+  setTimeout(() => {
+    viewer.cameraOrbit = "0deg 75deg 2.5m";
+  }, 300);
+}
+
+/* 💃 DANCE */
+function dance() {
+  reset();
+  let angle = 0;
+  danceInterval = setInterval(() => {
+    angle += 2;
+    viewer.cameraOrbit = `${angle}deg 75deg 2.5m`;
+  }, 30);
+}
+
+/* 👋 WAVE */
+function wave() {
+  reset();
+  viewer.cameraOrbit = "30deg 75deg 2.2m";
+  setTimeout(() => {
+    viewer.cameraOrbit = "-30deg 75deg 2.2m";
+  }, 300);
+}
+
+/* 📩 Storyline messages */
 window.addEventListener("message", (event) => {
-  console.log("📩 Received:", event.data);
-
-  if (!viewer) return;
-
-  switch (Number(event.data)) {
-    case 1:
-      viewer.animationName = "Idle";
-      viewer.play();
-      break;
-
-    case 2:
-      viewer.animationName = "Jump";
-      viewer.play();
-      break;
-
-    case 3:
-      viewer.animationName = "Wave";
-      viewer.play();
-      break;
-
-    case 4:
-      viewer.animationName = "Dance";
-      viewer.play();
-      break;
+  switch (event.data) {
+    case 1: reset(); break;
+    case 2: jump(); break;
+    case 3: wave(); break;
+    case 4: dance(); break;
   }
 });
 </script>
-
-
 
 </body>
 </html>
