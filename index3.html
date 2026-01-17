@@ -32,44 +32,35 @@
 <script>
 const viewer = document.getElementById("viewer");
 
-/* Model loaded */
-viewer.addEventListener("load", () => {
-  console.log("✅ Model loaded");
-  console.log("🎭 Available animations:", viewer.availableAnimations);
-});
-
-/* Helper to restart animation cleanly */
-function playAnim(name) {
-  viewer.pause();
-  viewer.currentTime = 0;
-  viewer.animationName = name;
-  viewer.play();
-}
-
-/* Listen to Storyline messages */
 window.addEventListener("message", (event) => {
-  if (!viewer || !viewer.loaded) return;
+  if (!viewer) {
+    console.log("❌ viewer not found");
+    return;
+  }
+
+  console.log("📩 Received:", event.data);
 
   switch (event.data) {
-
     case 1:
-      playAnim("Idle");
+      viewer.animationName = "Idle";
+      viewer.play();
       break;
-
     case 2:
-      playAnim("Jump");
+      viewer.animationName = "Jump";
+      viewer.play();
       break;
-
     case 3:
-      playAnim("Wave");
+      viewer.animationName = "Wave";
+      viewer.play();
       break;
-
     case 4:
-      playAnim("Dance");
+      viewer.animationName = "Dance";
+      viewer.play();
       break;
   }
 });
 </script>
+
 
 </body>
 </html>
