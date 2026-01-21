@@ -9,6 +9,35 @@
 
   
 </head>
+<script>
+let score = 0;
+let attempts = 0;
+
+window.addEventListener("message", (event) => {
+  if (!event.data || event.data.type !== "action") return;
+
+  console.log("📩 Received action:", event.data.value);
+
+  if (event.data.value === 1) {
+    score += 10;
+    console.log("✅ Correct! Score:", score);
+
+    parent.postMessage(
+      { type: "score", value: score },
+      "*"
+    );
+
+  } else {
+    attempts += 1;
+    console.log("❌ Wrong! Attempts:", attempts);
+
+    parent.postMessage(
+      { type: "attempts", value: attempts },
+      "*"
+    );
+  }
+});
+</script>
 
 <body>
 
