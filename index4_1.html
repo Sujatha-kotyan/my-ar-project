@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AR Test</title>
+
+  <!-- Model Viewer -->
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  </script>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <model-viewer
+    id="viewer"
+    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+    camera-controls
+    auto-rotate
+    animation-name="Idle"
+    autoplay>
+  </model-viewer>
+
+<script>
+    let score = 0;
+let attempts = 0;
+const viewer = document.getElementById("viewer");
+
+viewer.addEventListener("load", () => {
+  console.log("✅ Model loaded and visible");
+});
+
+window.addEventListener("message", (event) => {
+  console.log("📩 Message:", event.data);
+  attempts++;
+  switch (event.data) {
+
+    // IDLE
+    case 1:
+      score += 10;
+      viewer.cameraOrbit = "0deg 75deg 2.5m";
+      viewer.fieldOfView = "45deg";
+      viewer.autoRotate = false;
+      break;
+
+    // JUMP (camera up & down)
+    case 2:
+       score += 20;
+      viewer.cameraOrbit = "0deg 60deg 1.8m";
+      setTimeout(() => {
+        viewer.cameraOrbit = "0deg 75deg 2.5m";
+      }, 300);
+      break;
+
+    // WAVE (small rotate)
+    case 3:
+       score += 30;
+      viewer.cameraOrbit = "30deg 75deg 2.5m";
+      break;
+
+    // DANCE (rotate model)
+    case 4:
+       score += 40;
+      viewer.autoRotate = true;
+      viewer.autoRotateDelay = 0;
+      viewer.rotationPerSecond = "180deg";
+      break;
+  }
+
+  // 🔁 SEND DATA BACK TO STORYLINE
+  window.parent.postMessage(
+    {
+      score: score,
+      attempts: attempts
+    },
+    "*"
+  );
+
+  console.log("Sent to Storyline → Score:", score, "Attempts:", attempts);
+});
+</script>
+
+</body>
+</html>
