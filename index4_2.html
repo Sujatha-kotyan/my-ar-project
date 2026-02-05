@@ -38,35 +38,15 @@
 </model-viewer>
 
 <script>
-let isDragging = false;
-let lastX = 0;
-let lastY = 0;
+viewer.addEventListener("wheel", (e) => {
+  e.preventDefault();
 
-viewer.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  lastX = e.clientX;
-  lastY = e.clientY;
-});
-
-window.addEventListener("mouseup", () => {
-  isDragging = false;
-});
-
-window.addEventListener("mousemove", (e) => {
-  if (!isDragging) return;
-
-  const deltaX = e.clientX - lastX;
-  const deltaY = e.clientY - lastY;
-
-  lastX = e.clientX;
-  lastY = e.clientY;
-
-  // rotate model
   const orbit = viewer.getCameraOrbit();
-  const theta = orbit.theta + deltaX * 0.3;
-  const phi = orbit.phi + deltaY * 0.3;
+  let radius = orbit.radius + e.deltaY * 0.001;
 
-  viewer.cameraOrbit = `${theta}deg ${phi}deg ${orbit.radius}m`;
+  radius = Math.min(Math.max(radius, 1), 5);
+
+  viewer.cameraOrbit = `${orbit.theta}deg ${orbit.phi}deg ${radius}m`;
 });
 </script>
 
