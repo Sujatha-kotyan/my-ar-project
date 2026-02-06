@@ -50,6 +50,12 @@
   auto-rotate
   style="width:100vw;height:100vh;"
 >
+  <div class="target bubble green" data-score="10"
+     style="position:absolute; top:40%; left:40%;"></div>
+
+<div class="target bubble red" data-score="-5"
+     style="position:absolute; top:30%; left:60%;"></div>
+
 </model-viewer>
 
 <!-- Shooter bubble -->
@@ -90,6 +96,19 @@ function shootBubble() {
   }
 
   move();
+}
+</script>
+<script>
+function isColliding(a, b) {
+  const r1 = a.getBoundingClientRect();
+  const r2 = b.getBoundingClientRect();
+
+  return !(
+    r1.top > r2.bottom ||
+    r1.bottom < r2.top ||
+    r1.left > r2.right ||
+    r1.right < r2.left
+  );
 }
 </script>
 
