@@ -15,14 +15,16 @@
     background: black;
   }
 
-  .bubble {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #9cf, #38f);
-    position: absolute;
-    cursor: pointer;
-  }
+model-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.bubble {
+  position: absolute;
+  z-index: 10;
+}
 
   .target {
     background: radial-gradient(circle, #f99, #c33);
@@ -50,21 +52,17 @@
   auto-rotate
   style="width:100vw;height:100vh;"
 >
-  <div class="target bubble green" data-score="10"
-     style="position:absolute; top:40%; left:40%;"></div>
 
-<div class="target bubble red" data-score="-5"
-     style="position:absolute; top:30%; left:60%;"></div>
 
 </model-viewer>
 
-<!-- Shooter bubble -->
+<!-- Shooter -->
 <div id="shooter" class="bubble" style="left:50%; bottom:30px;"></div>
 
-<!-- Target bubbles -->
-<div class="bubble target" style="left:40%; top:120px;"></div>
-<div class="bubble target" style="left:55%; top:160px;"></div>
-<div class="bubble target" style="left:48%; top:220px;"></div>
+<!-- Targets -->
+<div class="bubble target" data-score="10" style="left:40%; top:120px;"></div>
+<div class="bubble target" data-score="-5" style="left:55%; top:160px;"></div>
+<div class="bubble target" data-score="20" style="left:48%; top:220px;"></div>
 
 <script>
 let score = 0;
@@ -85,18 +83,39 @@ function shootBubble() {
   bubble.style.bottom = "auto";
 
   function move() {
-    y -= 8; // speed
+    y -= 6;
     bubble.style.top = y + "px";
+
+    document.querySelectorAll(".target").forEach(target => {
+      if (isColliding(bubble, target)) {
+
+        const value = parseInt(target.dataset.score);
+        score += value;
+
+        target.classList.add("pop");
+        bubble.remove();
+
+        parent.postMessage(
+          { type: "SCORE", value: score },
+          "*"
+        );
+
+        console.log("🎯 HIT:", value, "TOTAL:", score);
+        return;
+      }
+    });
 
     if (y < -40) {
       bubble.remove();
       return;
     }
+
     requestAnimationFrame(move);
   }
 
   move();
 }
+
 </script>
 <script>
 function isColliding(a, b) {
