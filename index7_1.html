@@ -2,89 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AR Bubble Shooter – Stable Base</title>
-
-<script type="module"
-  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-</script>
+<title>Bubble Shooter – Grid Base</title>
 
 <style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    background: black;
-  }
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+}
 
-  model-viewer {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-  }
+.bubble {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: absolute;
+}
 
-  .bubble {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    position: absolute;
-    z-index: 10;
-  }
-
-  .blue  { background: radial-gradient(circle, #9cf, #38f); }
-  .red   { background: radial-gradient(circle, #f99, #c33); }
-  .green { background: radial-gradient(circle, #9f9, #2c7); }
-
+.blue  { background: radial-gradient(circle, #9cf, #38f); }
+.red   { background: radial-gradient(circle, #f99, #c33); }
+.green { background: radial-gradient(circle, #9f9, #2c7); }
 </style>
 </head>
 
 <body>
 
-<!-- 3D Background -->
-<model-viewer
-  src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-  camera-controls
-  auto-rotate
-  style="width:100vw;height:100vh;">
-</model-viewer>
-
-<!-- Shooter (fixed) -->
+<!-- Shooter -->
 <div id="shooter" class="bubble blue"></div>
 
 <script>
-/* =====================
-   CONFIG
-===================== */
-const BUBBLE_SIZE = 36;
-const GRID_TOP = 80;
+/* ===== CONFIG ===== */
+const SIZE = 36;
 const COLS = 8;
-const CELL = window.innerWidth / COLS;
+const CELL = SIZE + 4;
+const TOP = 60;
 
 const colors = ["blue", "red", "green"];
+let board = [];
 
-/* =====================
-   SHOOTER SETUP
-===================== */
+/* ===== SHOOTER ===== */
 const shooter = document.getElementById("shooter");
+shooter.style.left = (window.innerWidth / 2 - SIZE / 2) + "px";
+shooter.style.top = (window.innerHeight - 70) + "px";
 
-function placeShooter() {
-  shooter.style.left = (window.innerWidth / 2 - BUBBLE_SIZE / 2) + "px";
-  shooter.style.top = (window.innerHeight - 60) + "px";
-}
-placeShooter();
-
-/* =====================
-   SHOOT ACTION
-===================== */
 shooter.addEventListener("click", shootBubble);
 
+/* ===== SHOOT ===== */
 function shootBubble() {
-
   const bubble = document.createElement("div");
-  bubble.classList.add("bubble");
-
   const color = colors[Math.floor(Math.random() * colors.length)];
-  bubble.classList.add(color);
-  bubble.dataset.color = color;
 
+  bubble.className = `bubble ${color}`;
+  bubble.dataset.color = color;
   document.body.appendChild(bubble);
 
   let x = shooter.offsetLeft;
@@ -94,12 +62,12 @@ function shootBubble() {
   bubble.style.top = y + "px";
 
   function move() {
-    y -= 6;
+    y -= 8;
     bubble.style.top = y + "px";
 
-    // Reach top → lock bubble
-    if (y <= GRID_TOP) {
-      snapToGrid(bubble, x);
+    // Hit ceiling or another bubble
+    if (y <= TOP || hitBubble(bubble)) {
+      lockBubble(bubble);
       return;
     }
 
@@ -109,17 +77,38 @@ function shootBubble() {
   move();
 }
 
-/* =====================
-   GRID SNAP
-===================== */
-function snapToGrid(bubble, x) {
-  const col = Math.floor(x / CELL);
-  const snapX = col * CELL + CELL / 2 - BUBBLE_SIZE / 2;
+/* ===== COLLISION ===== */
+function hitBubble(bubble) {
+  return board.some(b => isColliding(bubble, b.el));
+}
 
-  bubble.style.left = snapX + "px";
-  bubble.style.top = GRID_TOP + "px";
+/* ===== LOCK TO GRID ===== */
+function lockBubble(bubble) {
+  const col = Math.floor(bubble.offsetLeft / CELL);
+  const row = Math.floor((bubble.offsetTop - TOP) / CELL);
 
-  console.log("🟢 Bubble locked:", bubble.dataset.color);
+  const x = col * CELL + 10;
+  const y = TOP + row * CELL;
+
+  bubble.style.left = x + "px";
+  bubble.style.top = y + "px";
+
+  board.push({ el: bubble, row, col, color: bubble.dataset.color });
+
+  console.log("🧩 Bubble locked:", bubble.dataset.color);
+}
+
+/* ===== COLLISION CHECK ===== */
+function isColliding(a, b) {
+  const r1 = a.getBoundingClientRect();
+  const r2 = b.getBoundingClientRect();
+
+  return !(
+    r1.right < r2.left ||
+    r1.left > r2.right ||
+    r1.bottom < r2.top ||
+    r1.top > r2.bottom
+  );
 }
 </script>
 
