@@ -15,21 +15,29 @@
     background: black;
   }
 
-model-viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
+  model-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
 
-.bubble {
-  position: absolute;
-  z-index: 10;
-}
+  /* 🔵 ALL BUBBLES */
+  .bubble {
+    position: absolute;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #9cf, #38f);
+    cursor: pointer;
+  }
 
+  /* 🔴 TARGET BUBBLES */
   .target {
     background: radial-gradient(circle, #f99, #c33);
   }
 
+  /* 💥 POP EFFECT */
   .pop {
     animation: pop 0.3s forwards;
   }
@@ -45,28 +53,25 @@ model-viewer {
 
 <body>
 
+<!-- AR MODEL (VISUAL ONLY) -->
 <model-viewer
   id="viewer"
   src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   camera-controls
   auto-rotate
   style="width:100vw;height:100vh;"
->
+></model-viewer>
 
-
-</model-viewer>
-
-<!-- Shooter -->
+<!-- 🔵 SHOOTER -->
 <div id="shooter" class="bubble" style="left:50%; bottom:30px;"></div>
 
-<!-- Targets -->
+<!-- 🔴 TARGETS -->
 <div class="bubble target" data-score="10" style="left:40%; top:120px;"></div>
 <div class="bubble target" data-score="-5" style="left:55%; top:160px;"></div>
 <div class="bubble target" data-score="20" style="left:48%; top:220px;"></div>
 
 <script>
 let score = 0;
-
 const shooter = document.getElementById("shooter");
 
 shooter.addEventListener("click", shootBubble);
@@ -95,6 +100,7 @@ function shootBubble() {
         target.classList.add("pop");
         bubble.remove();
 
+        // 👉 SEND SCORE TO STORYLINE
         parent.postMessage(
           { type: "SCORE", value: score },
           "*"
@@ -116,8 +122,7 @@ function shootBubble() {
   move();
 }
 
-</script>
-<script>
+// 🔍 COLLISION CHECK
 function isColliding(a, b) {
   const r1 = a.getBoundingClientRect();
   const r2 = b.getBoundingClientRect();
@@ -130,7 +135,6 @@ function isColliding(a, b) {
   );
 }
 </script>
-
 
 </body>
 </html>
