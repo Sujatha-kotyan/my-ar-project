@@ -48,13 +48,8 @@
 </head>
 
 <body>
-<audio id="popSound" preload="auto" playsinline>
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-bubble-pop-up-alert-notification-2357.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="badSound" preload="auto" playsinline>
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
-</audio>
+<audio id="popSound"></audio>
+<audio id="badSound"></audio>
 
 
 <model-viewer
@@ -114,24 +109,38 @@ document.body.addEventListener("click", unlockAudio, { once: true });
 </script>
 
 <script>
+
 let score = 0;
 
 const popSound = document.getElementById("popSound");
 const badSound = document.getElementById("badSound");
+
+// Set sources AFTER user interaction (Storyline-safe)
+function playSound(type) {
+  let audio = type === "good" ? popSound : badSound;
+
+  audio.src =
+    type === "good"
+      ? "https://assets.mixkit.co/sfx/preview/mixkit-bubble-pop-up-alert-notification-2357.mp3"
+      : "https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3";
+
+  audio.currentTime = 0;
+  audio.play().catch(err => console.log("Audio blocked:", err));
+}
 
 document.querySelectorAll(".bubble").forEach(bubble => {
   bubble.addEventListener("click", () => {
     const value = parseInt(bubble.dataset.score);
 
     score += value;
-
     bubble.classList.add("pop");
 
-    if (value > 0) popSound.play();
-    else badSound.play();
+    if (value > 0) playSound("good");
+    else playSound("bad");
 
+    // 🔴 SEND SCORE TO STORYLINE
     parent.postMessage(
-      { type: "SCORE", value: score },
+      { type: "SCORE_UPDATE", value: score },
       "*"
     );
 
@@ -139,6 +148,7 @@ document.querySelectorAll(".bubble").forEach(bubble => {
   });
 });
 </script>
+
 
 </body>
 </html>
