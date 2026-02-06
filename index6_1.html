@@ -48,8 +48,14 @@
 </head>
 
 <body>
-<audio id="popSound" src="https://assets.mixkit.co/sfx/preview/mixkit-bubble-pop-up-alert-notification-2357.mp3"></audio>
-<audio id="badSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3"></audio>
+<audio id="popSound" preload="auto" playsinline>
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-bubble-pop-up-alert-notification-2357.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="badSound" preload="auto" playsinline>
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
+</audio>
+
 
 <model-viewer
   id="viewer"
