@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AR Bubble Shooter – Grid Base</title>
+<title>AR Bubble Shooter – Stable Base</title>
 
 <script type="module"
   src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -27,17 +27,18 @@
     border-radius: 50%;
     position: absolute;
     z-index: 10;
-    cursor: pointer;
   }
-/* Colors */
-  .blue { background: radial-gradient(circle, #9cf, #38f); }
-  .red { background: radial-gradient(circle, #f99, #c33); }
+
+  .blue  { background: radial-gradient(circle, #9cf, #38f); }
+  .red   { background: radial-gradient(circle, #f99, #c33); }
   .green { background: radial-gradient(circle, #9f9, #2c7); }
+
 </style>
 </head>
+
 <body>
 
-<!-- 3D Model -->
+<!-- 3D Background -->
 <model-viewer
   src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   camera-controls
@@ -45,40 +46,41 @@
   style="width:100vw;height:100vh;">
 </model-viewer>
 
-<!-- Shooter Bubble -->
+<!-- Shooter (fixed) -->
 <div id="shooter" class="bubble blue"></div>
+
 <script>
-/* =========================
-   GRID CONFIG
-========================= */
-const GRID_COLS = 6;
-const GRID_WIDTH = window.innerWidth;
-const CELL_SIZE = GRID_WIDTH / GRID_COLS;
+/* =====================
+   CONFIG
+===================== */
+const BUBBLE_SIZE = 36;
+const GRID_TOP = 80;
+const COLS = 8;
+const CELL = window.innerWidth / COLS;
 
-let score = 0;
+const colors = ["blue", "red", "green"];
 
-/* =========================
+/* =====================
    SHOOTER SETUP
-========================= */
+===================== */
 const shooter = document.getElementById("shooter");
-positionShooter();
 
-function positionShooter() {
-  shooter.style.left = (window.innerWidth / 2 - 18) + "px";
-  shooter.style.bottom = "20px";
+function placeShooter() {
+  shooter.style.left = (window.innerWidth / 2 - BUBBLE_SIZE / 2) + "px";
+  shooter.style.top = (window.innerHeight - 60) + "px";
 }
+placeShooter();
 
-/* =========================
-   SHOOT LOGIC
-========================= */
+/* =====================
+   SHOOT ACTION
+===================== */
 shooter.addEventListener("click", shootBubble);
 
 function shootBubble() {
+
   const bubble = document.createElement("div");
   bubble.classList.add("bubble");
 
-  // Random color
-  const colors = ["blue", "red", "green"];
   const color = colors[Math.floor(Math.random() * colors.length)];
   bubble.classList.add(color);
   bubble.dataset.color = color;
@@ -95,8 +97,8 @@ function shootBubble() {
     y -= 6;
     bubble.style.top = y + "px";
 
-    // Stick to grid when reaching top area
-    if (y <= 60) {
+    // Reach top → lock bubble
+    if (y <= GRID_TOP) {
       snapToGrid(bubble, x);
       return;
     }
@@ -107,19 +109,17 @@ function shootBubble() {
   move();
 }
 
-/* =========================
+/* =====================
    GRID SNAP
-========================= */
+===================== */
 function snapToGrid(bubble, x) {
-  const col = Math.round(x / CELL_SIZE);
-  const snappedX = col * CELL_SIZE + CELL_SIZE / 2 - 18;
+  const col = Math.floor(x / CELL);
+  const snapX = col * CELL + CELL / 2 - BUBBLE_SIZE / 2;
 
-  bubble.style.left = snappedX + "px";
-  bubble.style.top = "60px";
+  bubble.style.left = snapX + "px";
+  bubble.style.top = GRID_TOP + "px";
 
-  bubble.classList.add("target");
-
-  console.log("🧲 Bubble snapped | Color:", bubble.dataset.color);
+  console.log("🟢 Bubble locked:", bubble.dataset.color);
 }
 </script>
 
