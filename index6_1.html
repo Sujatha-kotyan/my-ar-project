@@ -109,23 +109,16 @@ document.body.addEventListener("click", unlockAudio, { once: true });
 </script>
 
 <script>
-
 let score = 0;
 
-const popSound = document.getElementById("popSound");
-const badSound = document.getElementById("badSound");
-
-// Set sources AFTER user interaction (Storyline-safe)
 function playSound(type) {
-  let audio = type === "good" ? popSound : badSound;
-
-  audio.src =
+  const url =
     type === "good"
       ? "https://assets.mixkit.co/sfx/preview/mixkit-bubble-pop-up-alert-notification-2357.mp3"
       : "https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3";
 
-  audio.currentTime = 0;
-  audio.play().catch(err => console.log("Audio blocked:", err));
+  const sound = new Audio(url);
+  sound.play().catch(err => console.log("Audio blocked:", err));
 }
 
 document.querySelectorAll(".bubble").forEach(bubble => {
@@ -138,7 +131,7 @@ document.querySelectorAll(".bubble").forEach(bubble => {
     if (value > 0) playSound("good");
     else playSound("bad");
 
-    // 🔴 SEND SCORE TO STORYLINE
+    // 🔴 Send score to Storyline
     parent.postMessage(
       { type: "SCORE_UPDATE", value: score },
       "*"
@@ -148,6 +141,7 @@ document.querySelectorAll(".bubble").forEach(bubble => {
   });
 });
 </script>
+
 
 
 </body>
