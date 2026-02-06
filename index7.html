@@ -61,8 +61,38 @@
 <div class="bubble target" style="left:48%; top:220px;"></div>
 
 <script>
-console.log("Shooter loaded");
+let score = 0;
+
+const shooter = document.getElementById("shooter");
+
+shooter.addEventListener("click", shootBubble);
+
+function shootBubble() {
+  const bubble = shooter.cloneNode(true);
+  document.body.appendChild(bubble);
+
+  let x = shooter.offsetLeft;
+  let y = shooter.offsetTop;
+
+  bubble.style.left = x + "px";
+  bubble.style.top = y + "px";
+  bubble.style.bottom = "auto";
+
+  function move() {
+    y -= 8; // speed
+    bubble.style.top = y + "px";
+
+    if (y < -40) {
+      bubble.remove();
+      return;
+    }
+    requestAnimationFrame(move);
+  }
+
+  move();
+}
 </script>
+
 
 </body>
 </html>
