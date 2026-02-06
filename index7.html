@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>AR Bubble Shooter</title>
+
+<script type="module"
+  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+  }
+
+  .bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #9cf, #38f);
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .target {
+    background: radial-gradient(circle, #f99, #c33);
+  }
+
+  .pop {
+    animation: pop 0.3s forwards;
+  }
+
+  @keyframes pop {
+    to {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<model-viewer
+  id="viewer"
+  src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+  camera-controls
+  auto-rotate
+  style="width:100vw;height:100vh;"
+>
+</model-viewer>
+
+<!-- Shooter bubble -->
+<div id="shooter" class="bubble" style="left:50%; bottom:30px;"></div>
+
+<!-- Target bubbles -->
+<div class="bubble target" style="left:40%; top:120px;"></div>
+<div class="bubble target" style="left:55%; top:160px;"></div>
+<div class="bubble target" style="left:48%; top:220px;"></div>
+
+<script>
+console.log("Shooter loaded");
+</script>
+
+</body>
+</html>
