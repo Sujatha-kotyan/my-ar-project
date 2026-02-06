@@ -91,6 +91,27 @@
 
 </model-viewer>
 
+<script>
+let audioUnlocked = false;
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+
+  popSound.play().then(() => {
+    popSound.pause();
+    popSound.currentTime = 0;
+  }).catch(() => {});
+
+  badSound.play().then(() => {
+    badSound.pause();
+    badSound.currentTime = 0;
+  }).catch(() => {});
+
+  audioUnlocked = true;
+}
+
+document.body.addEventListener("click", unlockAudio, { once: true });
+</script>
 
 <script>
 let score = 0;
