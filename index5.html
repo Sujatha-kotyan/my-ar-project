@@ -27,28 +27,32 @@
 
 <body>
 
-<model-viewer
-  id="viewer"
-  src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-  camera-controls
-  auto-rotate
-  disable-zoom="false"
-  interaction-prompt="none"
-  style="background:#000">
-</model-viewer>
 
 <script>
-viewer.addEventListener("wheel", (e) => {
-  e.preventDefault();
+const viewer = document.getElementById("viewer");
 
-  const orbit = viewer.getCameraOrbit();
-  let radius = orbit.radius + e.deltaY * 0.001;
+const models = {
+  1: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+  2: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+  3: "https://modelviewer.dev/shared-assets/models/Chair.glb"
+};
 
-  radius = Math.min(Math.max(radius, 1), 5);
+window.addEventListener("message", (event) => {
+  const id = event.data;
 
-  viewer.cameraOrbit = `${orbit.theta}deg ${orbit.phi}deg ${radius}m`;
+  if (models[id]) {
+    viewer.src = models[id];
+    viewer.cameraOrbit = "0deg 75deg 2.5m";
+    console.log("Model switched to:", id);
+  }
+
+  // reset view
+  if (id === 4) {
+    viewer.cameraOrbit = "0deg 75deg 2.5m";
+  }
 });
 </script>
+
 
 </body>
 </html>
