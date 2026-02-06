@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>AR Bubble Shooter – Grid Base</title>
+
+<script type="module"
+  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+  }
+
+  model-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 10;
+    cursor: pointer;
+  }
+/* Colors */
+  .blue { background: radial-gradient(circle, #9cf, #38f); }
+  .red { background: radial-gradient(circle, #f99, #c33); }
+  .green { background: radial-gradient(circle, #9f9, #2c7); }
+</style>
+</head>
+<body>
+
+<!-- 3D Model -->
+<model-viewer
+  src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+  camera-controls
+  auto-rotate
+  style="width:100vw;height:100vh;">
+</model-viewer>
+
+<!-- Shooter Bubble -->
+<div id="shooter" class="bubble blue"></div>
+<script>
+/* =========================
+   GRID CONFIG
+========================= */
+const GRID_COLS = 6;
+const GRID_WIDTH = window.innerWidth;
+const CELL_SIZE = GRID_WIDTH / GRID_COLS;
+
+let score = 0;
+
+/* =========================
+   SHOOTER SETUP
+========================= */
+const shooter = document.getElementById("shooter");
+positionShooter();
+
+function positionShooter() {
+  shooter.style.left = (window.innerWidth / 2 - 18) + "px";
+  shooter.style.bottom = "20px";
+}
+
+/* =========================
+   SHOOT LOGIC
+========================= */
+shooter.addEventListener("click", shootBubble);
+
+function shootBubble() {
+  const bubble = document.createElement("div");
+  bubble.classList.add("bubble");
+
+  // Random color
+  const colors = ["blue", "red", "green"];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  bubble.classList.add(color);
+  bubble.dataset.color = color;
+
+  document.body.appendChild(bubble);
+
+  let x = shooter.offsetLeft;
+  let y = shooter.offsetTop;
+
+  bubble.style.left = x + "px";
+  bubble.style.top = y + "px";
+
+  function move() {
+    y -= 6;
+    bubble.style.top = y + "px";
+
+    // Stick to grid when reaching top area
+    if (y <= 60) {
+      snapToGrid(bubble, x);
+      return;
+    }
+
+    requestAnimationFrame(move);
+  }
+
+  move();
+}
+
+/* =========================
+   GRID SNAP
+========================= */
+function snapToGrid(bubble, x) {
+  const col = Math.round(x / CELL_SIZE);
+  const snappedX = col * CELL_SIZE + CELL_SIZE / 2 - 18;
+
+  bubble.style.left = snappedX + "px";
+  bubble.style.top = "60px";
+
+  bubble.classList.add("target");
+
+  console.log("🧲 Bubble snapped | Color:", bubble.dataset.color);
+}
+</script>
+
+</body>
+</html>
