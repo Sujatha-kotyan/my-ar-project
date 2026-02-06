@@ -15,14 +15,29 @@
     background: black;
   }
 
-  .bubble {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #9cf, #38f);
-    animation: float 2s infinite ease-in-out;
-    cursor: pointer;
+.bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: float 2s infinite ease-in-out;
+  cursor: pointer;
+}
+
+.blue { background: radial-gradient(circle, #9cf, #38f); }
+.green { background: radial-gradient(circle, #9f9, #2c7); }
+.red { background: radial-gradient(circle, #f99, #c33); }
+
+.pop {
+  animation: pop 0.3s forwards;
+}
+
+@keyframes pop {
+  to {
+    transform: scale(2);
+    opacity: 0;
   }
+}
+
 
   @keyframes float {
     0% { transform: translateY(0); }
@@ -33,6 +48,8 @@
 </head>
 
 <body>
+<audio id="popSound" src="https://assets.mixkit.co/sfx/preview/mixkit-bubble-pop-up-alert-notification-2357.mp3"></audio>
+<audio id="badSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3"></audio>
 
 <model-viewer
   id="viewer"
@@ -51,19 +68,26 @@
 <script>
 let score = 0;
 
+const popSound = document.getElementById("popSound");
+const badSound = document.getElementById("badSound");
+
 document.querySelectorAll(".bubble").forEach(bubble => {
   bubble.addEventListener("click", () => {
-    bubble.style.transform = "scale(0)";
-    bubble.style.opacity = "0";
-    score++;
+    const value = parseInt(bubble.dataset.score);
 
-    // Send score to Storyline
+    score += value;
+
+    bubble.classList.add("pop");
+
+    if (value > 0) popSound.play();
+    else badSound.play();
+
     parent.postMessage(
       { type: "SCORE", value: score },
       "*"
     );
 
-    console.log("Bubble popped. Score:", score);
+    console.log("Bubble:", value, "Total:", score);
   });
 });
 </script>
